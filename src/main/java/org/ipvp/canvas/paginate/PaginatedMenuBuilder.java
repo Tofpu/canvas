@@ -134,7 +134,14 @@ public class PaginatedMenuBuilder extends AbstractPaginatedMenuBuilder<Paginated
         List<SlotSettings> items = new ArrayList<>(this.items);
 
         do {
-            Menu page = getPageBuilder().build();
+            Menu.Builder<?> pageBuilder = getPageBuilder();
+            if (!getNewMenuBuilderModifiers().isEmpty()) {
+                for (Consumer<Menu.Builder<?>> menuBuilderModifier : getNewMenuBuilderModifiers()) {
+                    menuBuilderModifier.accept(pageBuilder);
+                }
+            }
+
+            Menu page = pageBuilder.build();
             if (!getNewMenuModifiers().isEmpty()) {
                 for (Consumer<Menu> menuModifier : getNewMenuModifiers()) {
                     menuModifier.accept(page);

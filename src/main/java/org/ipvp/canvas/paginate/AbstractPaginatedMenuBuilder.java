@@ -42,6 +42,7 @@ import java.util.function.Consumer;
 public abstract class AbstractPaginatedMenuBuilder<T extends AbstractPaginatedMenuBuilder<T>> {
 
     private final Menu.Builder<?> pageBuilder;
+    private final List<Consumer<Menu.Builder<?>>> newMenuBuilderModifiers;
     private final List<Consumer<Menu>> newMenuModifiers;
     private int previousButtonSlot = -1;
     private int nextButtonSlot = -1;
@@ -52,6 +53,7 @@ public abstract class AbstractPaginatedMenuBuilder<T extends AbstractPaginatedMe
 
     public AbstractPaginatedMenuBuilder(Menu.Builder<?> pageBuilder) {
         this.pageBuilder = pageBuilder;
+        this.newMenuBuilderModifiers = new LinkedList<>();
         this.newMenuModifiers = new LinkedList<>();
     }
 
@@ -95,6 +97,39 @@ public abstract class AbstractPaginatedMenuBuilder<T extends AbstractPaginatedMe
      */
     public List<Consumer<Menu>> getNewMenuModifiers() {
         return newMenuModifiers;
+    }
+
+    /**
+     * Adds a modifier to the menu builder for when a new menu is created.
+     *
+     * @param newMenuBuilderModifier modifier
+     * @return fluent pattern
+     */
+    public T newMenuBuilderModifier(Consumer<Menu.Builder<?>> newMenuBuilderModifier) {
+        if (newMenuBuilderModifier == null) {
+            throw new IllegalArgumentException("Menu builder modifier cannot be null");
+        }
+        this.newMenuBuilderModifiers.add(newMenuBuilderModifier);
+        return (T) this;
+    }
+
+    /**
+     * Adds multiple modifiers to the menu builder for when a new menu is created.
+     *
+     * @param newMenuBuilderModifiers a collection of modifiers
+     * @return fluent pattern
+     */
+    public T newMenuBuilderModifiers(Collection<Consumer<Menu.Builder<?>>> newMenuBuilderModifiers) {
+        newMenuBuilderModifiers.forEach(this::newMenuBuilderModifier);
+        return (T) this;
+    }
+
+    /**
+     * Gets the current modifiers to the menu builder for when a new menu is created.
+     * @return menu builder modifier
+     */
+    public List<Consumer<Menu.Builder<?>>> getNewMenuBuilderModifiers() {
+        return newMenuBuilderModifiers;
     }
 
     /**
