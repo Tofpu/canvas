@@ -125,6 +125,19 @@ public class PaginatedMenuBuilder extends AbstractPaginatedMenuBuilder<Paginated
     }
 
     /**
+     * Returns the total number of pages.
+     *
+     * @return total pages
+     * @apiNote Register all your items with any of the addItem methods before calling this method
+     * for accurate results.
+     */
+    public int totalPages() {
+        Menu demo = getPageBuilder().build();
+        int validItemsPerPage = getValidSlots(demo).size();
+        return (int) Math.ceil(items.size() / (double) validItemsPerPage);
+    }
+
+    /**
      * Builds the pages of the menu.
      *
      * @return menu pages
