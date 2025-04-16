@@ -116,6 +116,7 @@ public abstract class AbstractMenu implements Menu  {
             if (isRedraw() && open.getDimensions().equals(getDimensions())) {
                 inventory = holder.getInventory();
                 ((AbstractMenu) open).closedByPlayer(viewer, false);
+                viewer.getOpenInventory().setTitle(inventoryTitle);
             } else {
                 open.close(viewer);
                 inventory = createInventory(holder);
