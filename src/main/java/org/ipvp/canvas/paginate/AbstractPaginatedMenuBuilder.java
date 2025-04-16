@@ -50,6 +50,7 @@ public abstract class AbstractPaginatedMenuBuilder<T extends AbstractPaginatedMe
     private ItemStackTemplate previousButtonEmpty;
     private ItemStackTemplate nextButton;
     private ItemStackTemplate nextButtonEmpty;
+    private boolean ignoreEmptyButtonIcon = false;
 
     public AbstractPaginatedMenuBuilder(Menu.Builder<?> pageBuilder) {
         this.pageBuilder = pageBuilder;
@@ -328,6 +329,18 @@ public abstract class AbstractPaginatedMenuBuilder<T extends AbstractPaginatedMe
     }
 
     /**
+     * Ignore empty button icons. If set to true, empty icons will not override
+     * items in the menu.
+     *
+     * @param ignore true to ignore empty icons
+     * @return fluent pattern
+     */
+    public T ignoreEmptyButtonIcon(boolean ignore) {
+        this.ignoreEmptyButtonIcon = ignore;
+        return (T) this;
+    }
+
+    /**
      * Internal helper method to link any generated pages.
      *
      * @param pages pages to link
@@ -363,6 +376,7 @@ public abstract class AbstractPaginatedMenuBuilder<T extends AbstractPaginatedMe
      * @param clickHandler click handler to apply
      */
     void setPaginationIcon(Menu menu, int slotIndex, ItemStackTemplate icon, Slot.ClickHandler clickHandler) {
+        if (ignoreEmptyButtonIcon && icon == null) return;
         if (slotIndex >= 0 && slotIndex < menu.getDimensions().getArea()) {
             Slot slot = menu.getSlot(slotIndex);
             slot.setItemTemplate(icon);
